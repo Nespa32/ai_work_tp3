@@ -99,73 +99,77 @@ transfer(H1:T1, H2:T2) :- N1 is ((H1 * 60 + T1) + 40) mod (24 * 60), N2 is (H2 *
 
 
 % Exercise 2.
-sentenca --> frase_nom, frase_verb.
-sentenca --> frase_nom_p, frase_verb_p.
+sentenca(sent(FN, FV)) --> frase_nom(FN), frase_verb(FV).
+sentenca(sent(FN, FV)) --> frase_nom_p(FN), frase_verb_p(FV).
 
-frase_nom --> artigo_f, subst_f.
-frase_nom --> artigo_m, subst_m.
-frase_nom --> subst_f.
-frase_nom --> subst_m.
+frase_nom(frase_nom(A, S)) --> artigo_f(A), subst_f(S).
+frase_nom(frase_nom(A, S)) --> artigo_m(A), subst_m(S).
+frase_nom(frase_nom(S)) --> subst_f(S).
+frase_nom(frase_nom(S)) --> subst_m(S).
 
-frase_nom_p --> artigo_p_f, subst_p_f.
-frase_nom_p --> artigo_p_m, subst_p_m.
-frase_nom_p --> subst_p_f.
-frase_nom_p --> subst_p_m.
+frase_nom_p(frase_nom_p(A, S)) --> artigo_p_f(A), subst_p_f(S).
+frase_nom_p(frase_nom_p(A, S)) --> artigo_p_m(A), subst_p_m(S).
+frase_nom_p(frase_nom_p(S)) --> subst_p_f(S).
+frase_nom_p(frase_nom_p(S)) --> subst_p_m(S).
 
-frase_verb --> verbo.
-frase_verb --> verbo, preposicao, frase_nom.
-frase_verb --> verbo, preposicao, frase_nom_p.
-frase_verb_p --> verbo_p.
-frase_verb_p --> verbo_p, preposicao, frase_nom.
-frase_verb_p --> verbo_p, preposicao, frase_nom_p.
+frase_verb(frase_verbal(V)) --> verbo(V).
+frase_verb(frase_verbal(V, P, FN)) --> verbo(V), preposicao(P), frase_nom(FN).
+frase_verb(frase_verbal(V, P, FN)) --> verbo(V), preposicao(P), frase_nom_p(FN).
+frase_verb_p(frase_verbal_p(V)) --> verbo_p(V).
+frase_verb_p(frase_verbal_p(V, P, FN)) --> verbo_p(V), preposicao(P), frase_nom(FN).
+frase_verb_p(frase_verbal_p(V, P, FN)) --> verbo_p(V), preposicao(P), frase_nom_p(FN).
 
-artigo_f --> [a].
-artigo_f --> ['A'].
-artigo_m --> [o].
-artigo_m --> ['O'].
-artigo_p_f --> [as].
-artigo_p_f --> ['As'].
-artigo_p_m --> [os].
-artigo_p_m --> ['Os'].
+artigo_f(artigo(a)) --> [a].
+artigo_f(artigo('A')) --> ['A'].
+artigo_m(artigo(o)) --> [o].
+artigo_m(artigo('O')) --> ['O'].
+artigo_p_f(artigo(as)) --> [as].
+artigo_p_f(artigo('As')) --> ['As'].
+artigo_p_m(artigo(os)) --> [os].
+artigo_p_m(artigo('Os')) --> ['Os'].
 
-subst_f --> [menina].
-subst_f --> [floresta].
-subst_f --> [mae].
-subst_f --> [vida].
-subst_f --> [noticia].
-subst_f --> [cidade].
-subst_f --> [porta].
-subst_p_f --> [lagrimas].
-subst_m --> [tempo].
-subst_m --> [cacador].
-subst_m --> [rio].
-subst_m --> [rosto].
-subst_m --> [mar].
-subst_m --> [vento].
-subst_m --> [martelo].
-subst_m --> [cachorro].
-subst_m --> [sino].
-subst_p_m --> [tambor].
-subst_p_m --> [lobos].
-subst_p_m --> [tambores].
+subst_f(substantivo(menina)) --> [menina].
+subst_f(substantivo(floresta)) --> [floresta].
+subst_f(substantivo(mae)) --> [mae].
+subst_f(substantivo(vida)) --> [vida].
+subst_f(substantivo(noticia)) --> [noticia].
+subst_f(substantivo(cidade)) --> [cidade].
+subst_f(substantivo(porta)) --> [porta].
+subst_p_f(substantivo(lagrimas)) --> [lagrimas].
+subst_m(substantivo(tempo)) --> [tempo].
+subst_m(substantivo(cacador)) --> [cacador].
+subst_m(substantivo(rio)) --> [rio].
+subst_m(substantivo(rosto)) --> [rosto].
+subst_m(substantivo(mar)) --> [mar].
+subst_m(substantivo(vento)) --> [vento].
+subst_m(substantivo(martelo)) --> [martelo].
+subst_m(substantivo(cachorro)) --> [cachorro].
+subst_m(substantivo(sino)) --> [sino].
+subst_p_m(substantivo(tambor)) --> [tambor].
+subst_p_m(substantivo(lobos)) --> [lobos].
+subst_p_m(substantivo(tambores)) --> [tambores].
 
-verbo --> [corre].
-verbo --> [correu].
-verbo --> [bateu].
-verbo_p --> [correram].
-verbo_p --> [corriam].
-verbo_p --> [batiam].
-verbo_p --> [bateram].
+verbo(verbo(corre)) --> [corre].
+verbo(verbo(correu)) --> [correu].
+verbo(verbo(bateu)) --> [bateu].
+verbo_p(verbo_p(correram)) --> [correram].
+verbo_p(verbo_p(corriam)) --> [corriam].
+verbo_p(verbo_p(batiam)) --> [batiam].
+verbo_p(verbo_p(bateram)) --> [bateram].
 
 % the test cases don't seem to need f/m or s/p qualifiers
-preposicao --> [para].
-preposicao --> [pela]. % s f
-preposicao --> [com].
-preposicao --> [pelo]. % s m
-preposicao --> [a]. % s f
-preposicao --> [no]. % s m
-preposicao --> [na]. % s f
+preposicao(preposicao(para)) --> [para].
+preposicao(preposicao(pela)) --> [pela]. % s f
+preposicao(preposicao(com)) --> [com].
+preposicao(preposicao(pelo)) --> [pelo]. % s m
+preposicao(preposicao(a)) --> [a]. % s f
+preposicao(preposicao(no)) --> [no]. % s m
+preposicao(preposicao(na)) --> [na]. % s f
 
+% for using 2 arguments only
+sentenca --> sentenca(_).
+
+% test cases
 /* frases corretas */
 /*
 sentenca(['A',menina,corre,para,a,floresta],[]).
@@ -200,5 +204,11 @@ sentenca(['A',cacador,corriam,pela,rosto],[]).
 sentenca(['A',tambores,correu,pela,floresta],[]).
 sentenca(['Os',tambores,bateu,na,porta],[]).
 sentenca(['O',sino,bateu,na,meninas],[]).
+*/
+
+% derivation tree printing
+/*
+sentenca(X,['A',vida,corre],[])
+X = sent(frase_nom(artigo('A'),substantivo(vida)),frase_verbal(verbo(corre))).
 */
 
