@@ -1,6 +1,12 @@
 
 % Exercise 1.
 /* static data */
+/* operator defines */
+% '/' has to have a larger precedence so that we can break a phrase into slices divided by '/'
+% see http://www.swi-prolog.org/pldoc/man?predicate=op/3
+:- op(1000, yfx, :).
+:- op(1150, yfx, /).
+
 timetable(edinburgh,london,
 		[ 9:40/10:50/ba4733/alldays,
 		 13:40/14:50/ba4773/alldays,
@@ -47,12 +53,6 @@ timetable(zurich,london,
 
 timetable(zurich,milan,
 		[ 7:55/8:45/sr620/alldays]).
-
-/* operator defines */
-% '/' has to have a larger precedence so that we can break a phrase into slices divided by '/'
-% see http://www.swi-prolog.org/pldoc/man?predicate=op/3
-:- op(1000, yfx, :).
-:- op(1150, yfx, /).
 
 /* actual useful code */
 /* calculate a route */
