@@ -97,6 +97,30 @@ deptime([_-_:_:DepTime|_], DepTime).
 /* '<=' apparently does not exist in Prolog */
 transfer(H1:T1, H2:T2) :- N1 is ((H1 * 60 + T1) + 40) mod (24 * 60), N2 is (H2 * 60 + T2) + 1, N1 < N2.
 
+% visit a list of cities with a known start/end
+visit(Start, Day, CityList, Route) :- visit_aux(Start, Start, Day, CityList, Route).
+
+remove(X, [X|T], T) :- !.
+remove(X, [Y|T1], [Y|T2]) :-
+    remove(X, T1, T2).
+
+% just a static helper
+next_day(mo, tu).
+next_day(tu, we).
+next_day(we, th).
+next_day(th, fr).
+next_day(fr, sa).
+next_day(sa, su).
+next_day(su, mo).
+
+visit_aux(End, Start, Day, [], [Start-End:FlightNum:Day:DepTime]) :-
+    flight(Start, End, Day, FlightNum, DepTime, _).
+visit_aux(End, Start, Day, CityList, [Start-Next:FlightNum:Day:DepTime|RestOfRoute]) :-
+    member(Next, CityList),
+    flight(Start, Next, Day, FlightNum, DepTime, _),
+    next_day(Day, NextDay),
+    remove(Next, CityList, LeftoverCityList),
+    visit_aux(End, Next, NextDay, LeftoverCityList, RestOfRoute).
 
 % Exercise 2.
 sentenca(sent(FN, FV)) --> frase_nom(FN), frase_verb(FV).
