@@ -72,7 +72,7 @@ not_member_of_list(_, []) :- !.
 not_member_of_list(X, [H|T]) :- X \= H, not_member_of_list(X, T).
 
 match_day(_, alldays).
-match_day(X, [X]).
+match_day(X, [X|_]).
 match_day(X, [_|T]) :- match_day(X, T).
 
 match_times(DepTime, ArrTime, FlightNum, Day, [DepTime/ArrTime/FlightNum/Days|_]) :- match_day(Day, Days).

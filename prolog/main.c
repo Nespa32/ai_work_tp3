@@ -25,7 +25,7 @@ int main(int argc, char** argv)
     if (!PL_initialise(1, av))
         PL_halt(1);
 
-    printf("Actions:\n");
+    printf("Options:\n");
     printf("\t1: Check what days can you fly between two locations\n");
     printf("\t2: Plan a travel route between two locations\n");
     printf("\t3: Plan a larger trip starting and ending in a given location and date, passing by a list of destinations (one per day)\n");
@@ -211,14 +211,20 @@ void flight(char* source, char* dest)
 
     qid_t current_query = PL_open_query(NULL, PL_Q_NORMAL, pred, h0);
 
-    while (PL_next_solution(current_query))
+    if (PL_next_solution(current_query))
     {
-        char* s;
-        if (PL_get_atom_chars(h0 + 2, &s))
-            printf("%s ", s);
+        do
+        {
+            char* s;
+            if (PL_get_atom_chars(h0 + 2, &s))
+                printf("%s ", s);
+        }
+        while (PL_next_solution(current_query));
+        
+        printf("\n");
     }
-
-    printf("\n");
+    else
+        printf("No available days for this flight (invalid input data?)\n");
 
     PL_close_query(current_query);
 }
@@ -234,19 +240,30 @@ void route(char* source, char* dest, char* day)
 
     qid_t current_query = PL_open_query(NULL, PL_Q_NORMAL, pred, h0);
 
-    while (PL_next_solution(current_query))
+    if (PL_next_solution(current_query))
     {
-        print_list(h0 + 3);
+        int first = 1;
+        
+        do
+        {
+            if (first == 0)
+            {
+                printf("Keep looking (y/n)? ");
+                char continueStr[MAX_LINE_SIZE];
+                scanf(" %s", continueStr);
 
-        printf("Keep looking (y/n)? ");
-        char continueStr[MAX_LINE_SIZE];
-        scanf(" %s", continueStr);
-
-        if (continueStr[0] == 'n')
-            break;
+                if (continueStr[0] == 'n')
+                    break;
+            }
+            
+            first = 0;
+            
+            print_list(h0 + 3);
+        }
+        while (PL_next_solution(current_query));
     }
-
-    printf("\n");
+    else
+        printf("No route available\n");
 
     PL_close_query(current_query);
 }
@@ -263,19 +280,30 @@ void visit(char* source, char* day, char** location_list, int n_dest)
 
     qid_t current_query = PL_open_query(NULL, PL_Q_NORMAL, pred, h0);
 
-    while (PL_next_solution(current_query))
+    if (PL_next_solution(current_query))
     {
-        print_list(h0 + 3);
+        int first = 1;
+        
+        do
+        {
+            if (first == 0)
+            {
+                printf("Keep looking (y/n)? ");
+                char continueStr[MAX_LINE_SIZE];
+                scanf(" %s", continueStr);
 
-        printf("Keep looking (y/n)? ");
-        char answerStr[MAX_LINE_SIZE];
-        scanf(" %s", answerStr);
-
-        if (answerStr[0] == 'n')
-            break;
+                if (continueStr[0] == 'n')
+                    break;
+            }
+            
+            first = 0;
+            
+            print_list(h0 + 3);
+        }
+        while (PL_next_solution(current_query));
     }
-
-    printf("\n");
+    else
+        printf("No route available\n");
 
     PL_close_query(current_query);
 }
@@ -308,7 +336,7 @@ void synt_analyze(char** sentence_list, int n_words, int print_parse)
 
     if (PL_next_solution(current_query))
     {
-        printf("Valid sentence!\n");
+        printf("Valid sentence\n");
 
         if (print_parse)
         {
@@ -317,7 +345,9 @@ void synt_analyze(char** sentence_list, int n_words, int print_parse)
         }
     }
     else
-        printf("Invalid sentence...\n");
+        printf("Invalid sentence\n");
 
     PL_close_query(current_query);
 }
+
+
